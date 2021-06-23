@@ -34,7 +34,7 @@ export default function Register() {
           <label>Doğum Yılı</label>
           <input type="text" placeholder="Doğum Yılı" />
         </Form.Field>
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Kaydol</Button>
       </Form>
     </div>
   );

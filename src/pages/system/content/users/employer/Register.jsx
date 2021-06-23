@@ -30,7 +30,7 @@ export default function Register() {
           <label>Website</label>
           <input type="url" placeholder="website" />
         </Form.Field>
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Kaydol</Button>
       </Form>
     </div>
   );

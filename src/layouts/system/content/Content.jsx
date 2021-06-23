@@ -10,9 +10,9 @@ export default function Content() {
         <div>
             <Container className="main">
             {/* <Users/> */}
-            <Jobs/>
+            {/* <Jobs/> */}
             {/* <Cvs/> */}
-            {/* <CoverLetters/> */}
+            <CoverLetters/>
             </Container>
         </div>
     )
