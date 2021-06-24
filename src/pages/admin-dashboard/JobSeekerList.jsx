@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Icon, Menu, Table } from "semantic-ui-react";
+import JobSeekerUserService from "../../services/jobSeekerUserService";
 
 export default function JobSeekerList() {
+const [jobSeekerUsers, setJobSeekerUsers] = useState([])
+
+useEffect(() => {
+  let jobSeekerUserService = new JobSeekerUserService();
+  jobSeekerUserService.getJobSeekerUsers().then(result => setJobSeekerUsers(result.data.data));
+})
+
   return (
     <div>
       <h1>İş Arayanlar Listesi</h1>
@@ -19,15 +27,17 @@ export default function JobSeekerList() {
         </Table.Header>
 
         <Table.Body>
-          <Table.Row>
-            <Table.Cell></Table.Cell>
-            <Table.Cell></Table.Cell>
-            <Table.Cell></Table.Cell>
-            <Table.Cell></Table.Cell>
-            <Table.Cell></Table.Cell>
-            <Table.Cell></Table.Cell>
-            <Table.Cell></Table.Cell>
-          </Table.Row>
+          {jobSeekerUsers.map(jobSeekerUser => (
+          <Table.Row key={jobSeekerUser.id}>
+          <Table.Cell>{jobSeekerUser.id}</Table.Cell>
+          <Table.Cell>{jobSeekerUser.firstName}</Table.Cell>
+          <Table.Cell>{jobSeekerUser.lastName}</Table.Cell>
+          <Table.Cell>{jobSeekerUser.email}</Table.Cell>
+          <Table.Cell>{jobSeekerUser.nationalIdentity}</Table.Cell>
+          <Table.Cell>{jobSeekerUser.yearOfBirth}</Table.Cell>
+          <Table.Cell>{jobSeekerUser.active.toString()}</Table.Cell>
+        </Table.Row>
+          ))}
         </Table.Body>
 
         <Table.Footer>

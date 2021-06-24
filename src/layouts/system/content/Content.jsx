@@ -11,8 +11,8 @@ export default function Content() {
             <Container className="main">
             {/* <Users/> */}
             {/* <Jobs/> */}
-            {/* <Cvs/> */}
-            <CoverLetters/>
+            <Cvs/>
+            {/* <CoverLetters/> */}
             </Container>
         </div>
     )

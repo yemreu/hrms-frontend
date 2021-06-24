@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Icon, Menu, Table } from "semantic-ui-react";
+import JobTitleService from "../../services/jobTitleService";
 
 export default function JobTitleList() {
+  const [jobTitles, setJobTitles] = useState([]);
+
+  useEffect(() => {
+    let jobTitleService = new JobTitleService();
+    jobTitleService
+      .getJobTitles()
+      .then((result) => setJobTitles(result.data.data));
+  });
+
   return (
     <div>
       <h1>İş Pozisyonlar Listesi</h1>
@@ -14,10 +24,12 @@ export default function JobTitleList() {
         </Table.Header>
 
         <Table.Body>
-          <Table.Row>
-            <Table.Cell></Table.Cell>
-            <Table.Cell></Table.Cell>
-          </Table.Row>
+          {jobTitles.map((jobTitle) => (
+            <Table.Row key={jobTitle.id}>
+              <Table.Cell>{jobTitle.id}</Table.Cell>
+              <Table.Cell>{jobTitle.title}</Table.Cell>
+            </Table.Row>
+          ))}
         </Table.Body>
 
         <Table.Footer>

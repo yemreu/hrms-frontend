@@ -13,4 +13,8 @@ export default class JobService {
     getEmployerActiveJobs(userId){
         return axios.get("http://localhost:8080/api/jobs/get-employer-active-jobs?userId=" + userId);
     }
+
+    deactivateJob(jobId){
+        return axios.put("http://localhost:8080/api/jobs/deactivate-job",jobId);
+    }
 };
