@@ -1,3 +1,7 @@
+# Component Hierarchy 
+
+![alt text](https://github.com/yemreu/hrms-frontend/blob/main/component-hierarchy/hrms-frontend-react.png "Component Hierarchy")
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
