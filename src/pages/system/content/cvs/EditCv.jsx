@@ -1,7 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form, Divider, Segment, Label,Image } from "semantic-ui-react";
+import CoverLetterService from "../../../../services/coverLetterService";
+import LanguageService from "../../../../services/languageService";
+import SocialPlatformService from "../../../../services/socialPlatformService";
 
 export default function EditCv() {
+  const [coverLetters, setCoverLetters] = useState([])
+  const [languages, setLanguages] = useState([])
+  const [socialPlatforms, setSocialPlatforms] = useState([])
+
+  useEffect(() => {
+  let coverLetterService = new CoverLetterService();
+  let languageService = new LanguageService();
+  let socialPlatformService = new SocialPlatformService();
+  coverLetterService.getSeekerCoverLetters(1).then(result => setCoverLetters(result.data.data))
+  languageService.getLanguages().then(result => setLanguages(result.data.data))
+  socialPlatformService.getSocialPlatforms().then(result => setSocialPlatforms(result.data.data))
+  },[])
+
   return (
     <div>
       <h1>Cv Düzenle</h1>
@@ -10,14 +26,14 @@ export default function EditCv() {
           <Label>Fotoğraf</Label>
           <Form.Field>
             <br></br>
-            <Image src="http://res.cloudinary.com/dor1iaolp/image/upload/v1623678802/hrms/ezwzm6xwh9fy5uean4ty.png" size="medium"/>
+            <Image src="http://res.cloudinary.com/dor1iaolp/image/upload/v1623678802/hrms/ezwzm6xwh9fy5uean4ty.png" size="medium" centered/>
             <Form.Input type="file" />
           </Form.Field>
           <Divider horizontal></Divider>
           <Label>Ön Yazı</Label>
           <Form.Field>
           <br></br>
-            <Form.Select />
+            <Form.Select options={coverLetters.map(coverLetter => ({key:coverLetter.id,value:coverLetter.title,text:coverLetter.title}))}/>
           </Form.Field>
           <Divider horizontal></Divider>
           <Label>Eğitim Bilgileri</Label>
@@ -68,6 +84,7 @@ export default function EditCv() {
                 fluid
                 label="Yabancı Dil"
                 placeholder="Yabancı Dil"
+                options = {languages.map(language => ({key:language.id,value:language.name,text:language.name}))}
               />
               <Form.Select
                 fluid
@@ -88,7 +105,7 @@ export default function EditCv() {
           <Form.Field>
           <br></br>
             <Form.Group widths="equal">
-              <Form.Select />
+              <Form.Select options={socialPlatforms.map(socialPlatform => ({key:socialPlatform.id,value:socialPlatform.name,text:socialPlatform.name}))}/>
               <Form.Input type="text" fluid placeholder="Profil Adı" />
             </Form.Group>
           </Form.Field>
