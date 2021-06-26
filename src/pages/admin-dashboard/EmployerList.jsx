@@ -10,7 +10,7 @@ export default function EmployerList() {
     employerUserService
       .getEmployerUsers()
       .then((result) => setEmployerUsers(result.data.data));
-  });
+  },[]);
 
   return (
     <div>

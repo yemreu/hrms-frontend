@@ -1,5 +1,5 @@
 import React from 'react';
-import Navi from './Navi';
+import Navi from './navi/Navi';
 import Content from './content/Content';
 
 

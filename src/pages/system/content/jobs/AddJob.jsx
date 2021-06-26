@@ -20,6 +20,10 @@ export default function AddJob() {
       <Form>
         <Form.Select fluid label="İş Pozisyonu" placeholder="İş Pozisyonu" options={jobTitles.map(jobTitle => ({key:jobTitle.id,value:jobTitle.title,text:jobTitle.title}))}/>
         <Form.TextArea label="İş Tanımı" placeholder="İş Tanımı" />
+        <Form.Group widths="equal">
+          <Form.Checkbox toggle label="Full Time"/>
+          <Form.Checkbox toggle label="Remote"/>
+        </Form.Group>
         <Form.Select fluid label="Şehir" placeholder="Şehir" options={cities.map(city => ({key:city.code,value:city.name,text:city.name}))}/>
         <Form.Group widths="equal">
           <Form.Input fluid label="En Düşük Maaş" placeholder="En Düşük Maaş" />

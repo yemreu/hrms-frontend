@@ -8,7 +8,7 @@ const [jobSeekerUsers, setJobSeekerUsers] = useState([])
 useEffect(() => {
   let jobSeekerUserService = new JobSeekerUserService();
   jobSeekerUserService.getJobSeekerUsers().then(result => setJobSeekerUsers(result.data.data));
-})
+},[])
 
   return (
     <div>

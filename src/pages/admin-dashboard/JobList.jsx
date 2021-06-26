@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Icon, Menu, Table } from "semantic-ui-react";
-import JobService from "../../../../services/jobService";
+import { Button, Icon, Menu, Table } from "semantic-ui-react";
+import JobService from "../../services/jobService";
 
 export default function JobList() {
   const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
     let jobService = new JobService();
-    jobService.getActiveJobs().then((result) => setJobs(result.data.data));
+    jobService.getInActiveJobs().then((result) => setJobs(result.data.data));
   },[]);
 
   return (
@@ -22,6 +22,7 @@ export default function JobList() {
             <Table.HeaderCell>Açık Pozisyon Adedi</Table.HeaderCell>
             <Table.HeaderCell>Yayın Tarihi</Table.HeaderCell>
             <Table.HeaderCell>Son Başvuru Tarihi</Table.HeaderCell>
+            <Table.HeaderCell>Onay</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -34,6 +35,7 @@ export default function JobList() {
               <Table.Cell>{job.vacancy}</Table.Cell>
               <Table.Cell>{job.postingDate}</Table.Cell>
               <Table.Cell>{job.lastApplicationDate}</Table.Cell>
+              <Table.Cell><Button color="green">Onayla</Button></Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
