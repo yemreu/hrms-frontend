@@ -2,54 +2,9 @@ import React from "react";
 import { Button, Form } from "semantic-ui-react";
 import { useFormik } from "formik";
 import JobSeekerUserService from "../../../../../services/jobSeekerUserService";
+import * as Yup from 'yup';
 
 export default function Register() {
-  const validate = values => {
-    const errors = {};
-    if(!values.firstName){
-      errors.firstName = "Gerekli";
-    }else if(values.firstName.length > 50){
-      errors.firstName = "En fazla 50 karakter olmalı";
-    }
-
-    if(!values.lastName){
-      errors.lastName = "Gerekli";
-    }else if(values.lastName.length > 50){
-      errors.lastName = "En fazla 50 karakter olmalı";
-    }
-
-    if(!values.email){
-      errors.email = "Gerekli";
-    }else if(values.email.length > 320){
-      errors.email = "En fazla 320 karakter olmalı";
-    }else if(!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)){
-      errors.email = "Geçersiz email adresi";
-    }
-
-    if(!values.password){
-      errors.password = "Gerekli";
-    }
-
-    if(!values.repassword){
-      errors.repassword = "Gerekli";
-    }else if(values.password !== values.repassword){
-      errors.repassword = "Parolalar eşleşmiyor.";
-    }
-
-    if(!values.nationalIdentity){
-      errors.nationalIdentity = "Gerekli";
-    }else if(values.nationalIdentity.length > 11){
-      errors.nationalIdentity = "En fazla 11 karakter olmalı";
-    }
-
-    if(!values.yearOfBirth){
-      errors.yearOfBirth = "Gerekli";
-    }else if(values.yearOfBirth.length > 4){
-      errors.yearOfBirth = "En fazla 4 karakter olmalı";
-    }
-
-    return errors;
-  }
 
   const formik = useFormik({
       initialValues: {
@@ -61,11 +16,34 @@ export default function Register() {
         nationalIdentity: "",
         yearOfBirth: ""
       },
-      validate,
+      validationSchema: Yup.object({
+        firstName: Yup.string()
+        .max(50,"En fazla 50 karakter olmalı")
+        .required("Gerekli"),
+        lastName: Yup.string()
+        .max(50,"En fazla 50 karakter olmalı")
+        .required("Gerekli"),
+        email: Yup.string()
+        .email("Geçersiz email adresi")
+        .required("Gerekli"),
+        password: Yup.string()
+        .required("Gerekli")
+        .min(6,"Parole en az 6 karakter olmalı"),
+        repassword: Yup.string()
+        .required("Gerekli")
+        .min(6,"Parole en az 6 karakter olmalı")
+        .oneOf([Yup.ref("password"),null],"Parolalar eşleşmiyor."),
+        nationalIdentity: Yup.string()
+        .max(11,"En fazla 11 karakter olmalı")
+        .required("Gerekli"),
+        yearOfBirth: Yup.string()
+        .max(4,"En fazla 4 karakter olmalı")
+        .required("Gerekli")
+      }),
       onSubmit: values => {
         delete values.repassword;
         let jobSeekerUserService = new JobSeekerUserService();
-        jobSeekerUserService.register(values).then(result => (<div>{result.data.message}</div>));
+        jobSeekerUserService.register(values);
       }
   });
 
