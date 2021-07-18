@@ -28,10 +28,10 @@ export default function Register() {
         .required("Gerekli"),
         password: Yup.string()
         .required("Gerekli")
-        .min(6,"Parole en az 6 karakter olmalı"),
+        .min(6,"Parola en az 6 karakter olmalı"),
         repassword: Yup.string()
         .required("Gerekli")
-        .min(6,"Parole en az 6 karakter olmalı")
+        .min(6,"Parola en az 6 karakter olmalı")
         .oneOf([Yup.ref("password"),null],"Parolalar eşleşmiyor."),
         nationalIdentity: Yup.string()
         .max(11,"En fazla 11 karakter olmalı")

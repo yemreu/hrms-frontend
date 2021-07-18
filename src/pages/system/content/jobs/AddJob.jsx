@@ -14,11 +14,27 @@ export default function AddJob() {
     cityService.getCities().then(result => setCities(result.data.data));
   }, [])
 
+  const formik = useFormik({
+    initialValues: {
+      title: ""
+    },
+    validationSchema: Yup.object({
+      title: Yup.string()
+      .max(255,"En fazla 255 karakter olmalı")
+      .required("Gerekli")
+    }),
+    onSubmit: values => {
+      delete values.repassword;
+      let jobTitleService = new JobTitleService();
+      jobTitleService.addTitle(values);
+    }
+});
+
   return (
     <div>
       <h1>İş İlanı Formu</h1>
       <Form>
-        <Form.Select fluid label="İş Pozisyonu" placeholder="İş Pozisyonu" options={jobTitles.map(jobTitle => ({key:jobTitle.id,value:jobTitle.title,text:jobTitle.title}))}/>
+        <Form.Select id="jobTitle" name="jobTitle" fluid label="İş Pozisyonu" placeholder="İş Pozisyonu" options={jobTitles.map(jobTitle => ({key:jobTitle.id,value:jobTitle.title,text:jobTitle.title}))}/>
         <Form.TextArea label="İş Tanımı" placeholder="İş Tanımı" />
         <Form.Group widths="equal">
           <Form.Checkbox toggle label="Full Time"/>

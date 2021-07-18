@@ -9,4 +9,8 @@ export default class CoverLetterService {
     getSeekerCoverLetters(userId){
         return axios.get("http://localhost:8080/api/cover-letters/get-job-seeker-cover-letters?userId=" + userId);
     }
+
+    addCoverLetter(data){
+        return axios.post("http://localhost:8080/api/cover-letters/add",data);
+    }
 };
