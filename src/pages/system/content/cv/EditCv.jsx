@@ -3,11 +3,16 @@ import { Button, Form, Divider, Segment, Label,Image } from "semantic-ui-react";
 import CoverLetterService from "../../../../services/coverLetterService";
 import LanguageService from "../../../../services/languageService";
 import SocialPlatformService from "../../../../services/socialPlatformService";
+import CvService from "../../../../services/cvService";
+import ImageService from "../../../../services/imageService";
+import { useFormik } from "formik";
+import * as Yup from 'yup';
 
 export default function EditCv() {
   const [coverLetters, setCoverLetters] = useState([])
   const [languages, setLanguages] = useState([])
   const [socialPlatforms, setSocialPlatforms] = useState([])
+  const fileTypes = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 
   useEffect(() => {
   let coverLetterService = new CoverLetterService();
@@ -18,6 +23,61 @@ export default function EditCv() {
   socialPlatformService.getSocialPlatforms().then(result => setSocialPlatforms(result.data.data))
   },[])
 
+  const formik = useFormik({
+    initialValues: {
+      image: null,
+      coverLetter: "",
+      institutionName: "",
+      startingDate: "",
+      completionDate: "",
+      companyName: "",
+      title: "",
+      startDate: "",
+      endDate: "",
+      languages: "",
+      level: "",
+      socialPlatform: "",
+      profileName: "",
+      skills: ""
+    },
+    validationSchema: Yup.object({
+      image: Yup.mixed()
+      .test("fileSize","Dosya 1MB'den az olmalı",(file) => {console.log("file: ", typeof file); return !file || (file && file.size < 1048577)})
+      .test("fileType","Geçersiz dosya formatı",(file) => !file || (file && fileTypes.includes(file.type))),
+      institutionName: Yup.string()
+      .max(100,"En fazla 100 karakter olmalı")
+      .required("Gerekli"),
+      startingDate: Yup.date()
+      .required("Gerekli"),
+      companyName: Yup.string()
+      .max(100,"En fazla 100 karakter olmalı")
+      .required("Gerekli"),
+      title: Yup.string()
+      .max(50,"En fazla 50 karakter olmalı")
+      .required("Gerekli"),
+      startDate: Yup.date()
+      .required("Gerekli"),
+      languages: Yup.number()
+      .required("Gerekli"),
+      level: Yup.number()
+      .min(1)
+      .max(5)
+      .required("Gerekli"),
+      socialPlatform: Yup.number()
+      .required("Gerekli"),
+      profileName: Yup.string()
+      .max(100,"En fazla 100 karakter olmalı")
+      .required("Gerekli")
+    }),
+    onSubmit: values => {
+      let imageService = new ImageService();
+      imageService.uploadImage(values.image);
+      delete values.image
+      let cvService = new CvService();
+      cvService.saveCv(values);
+    }
+});
+
   return (
     <div>
       <h1>Cv Düzenle</h1>
@@ -27,31 +87,36 @@ export default function EditCv() {
           <Form.Field>
             <br></br>
             <Image src="http://res.cloudinary.com/dor1iaolp/image/upload/v1623678802/hrms/ezwzm6xwh9fy5uean4ty.png" size="medium" centered/>
-            <Form.Input type="file" />
+            <Form.Input id="image" name="image" type="file" onChange={(e) => formik.setFieldValue("image",e.currentTarget.files[0])} onBlur={formik.handleBlur}/>
+            {formik.touched.image && formik.errors.image ? <div>{formik.errors.image}</div> : null}
           </Form.Field>
           <Divider horizontal></Divider>
           <Label>Ön Yazı</Label>
           <Form.Field>
           <br></br>
-            <Form.Select options={coverLetters.map(coverLetter => ({key:coverLetter.id,value:coverLetter.title,text:coverLetter.title}))}/>
+            <Form.Select id="coverLetter" name="coverLetter" options={coverLetters.map(coverLetter => ({key:coverLetter.id,value:coverLetter.id,text:coverLetter.title}))} onChange={(e,item)=>formik.setFieldValue("coverLetter",item.value)} onBlur={formik.handleBlur}/>
           </Form.Field>
           <Divider horizontal></Divider>
           <Label>Eğitim Bilgileri</Label>
           <Form.Field>
             <label>Okul Adı</label>
-            <Form.Input fluid placeholder="Okul Adı" />
+            <Form.Input id="institutionName" name="institutionName" fluid placeholder="Okul Adı" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.institutionName}/>
+            {formik.touched.institutionName && formik.errors.institutionName ? <div>{formik.errors.institutionName}</div> : null}
             <Form.Group widths="equal">
-              <Form.Input
+              <Form.Input id="startingDate" name="startingDate"
                 type="month"
                 fluid
                 label="Başlangıç Tarihi"
                 placeholder="Başlangıç Tarihi"
+                onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.startingDate}
               />
-              <Form.Input
+              {formik.touched.startingDate && formik.errors.startingDate ? <div>{formik.errors.startingDate}</div> : null}
+              <Form.Input id="completionDate" name="completionDate"
                 type="month"
                 fluid
                 label="Bitiş Tarihi"
-                placeholder="Bitiş Maaş"
+                placeholder="Bitiş Tarihi"
+                onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.completionDate}
               />
             </Form.Group>
           </Form.Field>
@@ -59,34 +124,41 @@ export default function EditCv() {
           <Label>İş Deneyimleri</Label>
           <Form.Field>
             <label>İş Yeri Adı</label>
-            <Form.Input fluid placeholder="İş Yeri Adı" />
+            <Form.Input id="companyName" name="companyName" fluid placeholder="İş Yeri Adı" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.companyName}/>
+            {formik.touched.companyName && formik.errors.companyName ? <div>{formik.errors.companyName}</div> : null}
             <label>Pozisyon</label>
-            <Form.Input fluid placeholder="Pozisyon" />
+            <Form.Input id="title" name="title" fluid placeholder="Pozisyon" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.title}/>
+            {formik.touched.title && formik.errors.title ? <div>{formik.errors.title}</div> : null}
             <Form.Group widths="equal">
-              <Form.Input
+              <Form.Input id="startDate" name="startDate"
                 type="month"
                 fluid
                 label="Başlangıç Tarihi"
                 placeholder="Başlangıç Tarihi"
+                onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.startDate}
               />
-              <Form.Input
+              {formik.touched.startDate && formik.errors.startDate ? <div>{formik.errors.startDate}</div> : null}
+              <Form.Input id="endDate" name="endDate"
                 type="month"
                 fluid
                 label="Bitiş Tarihi"
                 placeholder="Bitiş Maaş"
+                onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.endDate}
               />
             </Form.Group>
           </Form.Field>
           <Divider horizontal></Divider>
           <Form.Field>
             <Form.Group widths="equal">
-              <Form.Select
+              <Form.Select id="languages" name="languages"
                 fluid
                 label="Yabancı Dil"
                 placeholder="Yabancı Dil"
-                options = {languages.map(language => ({key:language.id,value:language.name,text:language.name}))}
+                options = {languages.map(language => ({key:language.id,value:language.id,text:language.name}))}
+                onChange={(e,item)=>formik.setFieldValue("languages",item.value)} onBlur={formik.handleBlur}
               />
-              <Form.Select
+              {formik.touched.languages && formik.errors.languages ? <div>{formik.errors.languages}</div> : null}
+              <Form.Select id="level" name="level"
                 fluid
                 label="Seviye"
                 placeholder="Seviye"
@@ -97,7 +169,9 @@ export default function EditCv() {
                   { key: "4", value: "4", text: "4" },
                   { key: "5", value: "5", text: "5" },
                 ]}
+                onChange={(e,item)=>formik.setFieldValue("level",item.value)} onBlur={formik.handleBlur}
               />
+              {formik.touched.level && formik.errors.level ? <div>{formik.errors.level}</div> : null}
             </Form.Group>
           </Form.Field>
           <Divider horizontal></Divider>
@@ -105,14 +179,16 @@ export default function EditCv() {
           <Form.Field>
           <br></br>
             <Form.Group widths="equal">
-              <Form.Select options={socialPlatforms.map(socialPlatform => ({key:socialPlatform.id,value:socialPlatform.name,text:socialPlatform.name}))}/>
-              <Form.Input type="text" fluid placeholder="Profil Adı" />
+              <Form.Select id="socialPlatform" name="socialPlatform" options={socialPlatforms.map(socialPlatform => ({key:socialPlatform.id,value:socialPlatform.id,text:socialPlatform.name}))} onChange={(e,item)=>formik.setFieldValue("socialPlatform",item.value)} onBlur={formik.handleBlur}/>
+              {formik.touched.socialPlatform && formik.errors.socialPlatform ? <div>{formik.errors.socialPlatform}</div> : null}
+              <Form.Input id="profileName" name="profileName" type="text" fluid placeholder="Profil Adı" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.profileName}/>
+              {formik.touched.profileName && formik.errors.profileName ? <div>{formik.errors.profileName}</div> : null}
             </Form.Group>
           </Form.Field>
           <Divider horizontal></Divider>
           <Label>Yetenekler</Label>
           <Form.Field>
-            <Form.TextArea label="Yetenekler" placeholder="Yetenekler" />
+            <Form.TextArea id="skills" name="skills" label="Yetenekler" placeholder="Yetenekler" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.skills}/>
           </Form.Field>
           <Button type="submit">Kaydet</Button>
         </Form>

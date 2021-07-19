@@ -16,7 +16,6 @@ export default function AddJobTitle() {
       .required("Gerekli")
     }),
     onSubmit: values => {
-      delete values.repassword;
       let jobTitleService = new JobTitleService();
       jobTitleService.addTitle(values);
     }

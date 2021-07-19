@@ -25,4 +25,8 @@ export default class JobService {
     activateJob(jobId){
         return axios.put("http://localhost:8080/api/jobs/activate-job",jobId);
     }
+
+    addJob(data){
+        return axios.post("http://localhost:8080/api/jobs/add",data);
+    }
 };
