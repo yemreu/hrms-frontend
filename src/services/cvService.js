@@ -7,6 +7,6 @@ export default class CvService {
     }
 
     saveCv(data){
-        return axios.post("http://localhost:8080/api/cvs/save",data);
+        return axios.put("http://localhost:8080/api/cvs/save-cv",data);
     }
 };

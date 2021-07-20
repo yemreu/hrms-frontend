@@ -19,18 +19,18 @@ export default function AddJob() {
 
   const formik = useFormik({
     initialValues: {
-      jobTitle: "",
+      jobTitle: 0,
       description: "",
       fullTime: false,
       remote: false,
-      city: "",
+      city: 0,
       minSalary: "",
       maxSalary: "",
-      vacancy: "",
+      vacancy: 0,
       lastApplicationDate: ""
     },
     validationSchema: Yup.object({
-      jobTitle: Yup.string()
+      jobTitle: Yup.number()
       .required("Gerekli"),
       description: Yup.string()
       .required("Gerekli"),
@@ -53,7 +53,25 @@ export default function AddJob() {
     }),
     onSubmit: values => {
       let jobService = new JobService();
-      jobService.addJob(values);
+      let data = {
+        employerUser: {
+          id: 19
+        },
+        jobTitle: {
+          id: values.jobTitle
+        },
+        description: values.description,
+        fullTime: values.fullTime,
+        remote: values.remote,
+        city: {
+          code: values.city
+        },
+        minSalary: values.minSalary,
+        maxSalary: values.maxSalary,
+        vacancy: parseInt(values.vacancy,10),
+        lastApplicationDate: values.lastApplicationDate
+      }
+      jobService.addJob(data);
     }
 });
 

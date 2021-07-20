@@ -13,6 +13,9 @@ export default function EditCv() {
   const [languages, setLanguages] = useState([])
   const [socialPlatforms, setSocialPlatforms] = useState([])
   const fileTypes = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
+  const yearMonthToIsoString = (monthYear) => {
+    return new Date(monthYear).toISOString().slice(0, 10);
+  }
 
   useEffect(() => {
   let coverLetterService = new CoverLetterService();
@@ -26,27 +29,30 @@ export default function EditCv() {
   const formik = useFormik({
     initialValues: {
       image: null,
-      coverLetter: "",
+      coverLetter: 0,
       institutionName: "",
+      department: "",
       startingDate: "",
       completionDate: "",
       companyName: "",
       title: "",
       startDate: "",
       endDate: "",
-      languages: "",
-      level: "",
-      socialPlatform: "",
+      languages: 0,
+      level: 0,
+      socialPlatform: 0,
       profileName: "",
       skills: ""
     },
     validationSchema: Yup.object({
       image: Yup.mixed()
-      .test("fileSize","Dosya 1MB'den az olmalı",(file) => {console.log("file: ", typeof file); return !file || (file && file.size < 1048577)})
+      .test("fileSize","Dosya 1MB'den az olmalı",(file) => !file || (file && file.size < 1048577))
       .test("fileType","Geçersiz dosya formatı",(file) => !file || (file && fileTypes.includes(file.type))),
       institutionName: Yup.string()
       .max(100,"En fazla 100 karakter olmalı")
       .required("Gerekli"),
+      department: Yup.string()
+      .max(100,"En fazla 100 karakter olmalı"),
       startingDate: Yup.date()
       .required("Gerekli"),
       companyName: Yup.string()
@@ -71,10 +77,55 @@ export default function EditCv() {
     }),
     onSubmit: values => {
       let imageService = new ImageService();
-      imageService.uploadImage(values.image);
-      delete values.image
+      imageService.uploadImage(values.image,1);
       let cvService = new CvService();
-      cvService.saveCv(values);
+      let data = {
+        jobSeekerUser: {
+          id: 1
+        },
+        id: 29,
+        coverLetter: {
+          id: values.coverLetter
+        },
+        educations: [
+          {
+            id: 69,
+            institutionName: values.institutionName,
+            department: values.department,
+            startingDate: yearMonthToIsoString(values.startingDate),
+            completionDate: yearMonthToIsoString(values.completionDate)
+          }
+        ],
+        experiences: [
+          {
+            id: 9,
+            companyName: values.companyName,
+            title: values.title,
+            startDate: yearMonthToIsoString(values.startDate),
+            endDate: yearMonthToIsoString(values.endDate)
+          }
+        ],
+        languages: [
+          {
+            language: {
+              id: values.languages
+            },
+            level: values.level
+          }
+        ],
+        socialLinks: [
+          {
+            id: 14,
+            socialPlatform: {
+              id: values.socialPlatform
+            },
+            profileName: values.profileName
+          }
+        ],
+        skills: values.skills
+      }
+      console.log(data);
+      cvService.saveCv(data);
     }
 });
 
@@ -82,7 +133,7 @@ export default function EditCv() {
     <div>
       <h1>Cv Düzenle</h1>
       <Segment>
-        <Form>
+        <Form onSubmit={formik.handleSubmit}>
           <Label>Fotoğraf</Label>
           <Form.Field>
             <br></br>
@@ -102,6 +153,9 @@ export default function EditCv() {
             <label>Okul Adı</label>
             <Form.Input id="institutionName" name="institutionName" fluid placeholder="Okul Adı" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.institutionName}/>
             {formik.touched.institutionName && formik.errors.institutionName ? <div>{formik.errors.institutionName}</div> : null}
+            <label>Bölüm</label>
+            <Form.Input id="department" name="department" fluid placeholder="Bölüm" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.department}/>
+            {formik.touched.department && formik.errors.department ? <div>{formik.errors.department}</div> : null}
             <Form.Group widths="equal">
               <Form.Input id="startingDate" name="startingDate"
                 type="month"
@@ -148,6 +202,7 @@ export default function EditCv() {
             </Form.Group>
           </Form.Field>
           <Divider horizontal></Divider>
+          <Label>Yabancı Diller</Label>
           <Form.Field>
             <Form.Group widths="equal">
               <Form.Select id="languages" name="languages"
