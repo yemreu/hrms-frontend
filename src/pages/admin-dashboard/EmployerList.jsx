@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Icon, Menu, Table } from "semantic-ui-react";
+import { Icon, Menu, Table,Button } from "semantic-ui-react";
 import EmployerUserService from "../../services/employerUserService";
 
 export default function EmployerList() {
   const [employerUsers, setEmployerUsers] = useState([]);
+  const verifyCompanyUser = (companyId) =>  {
+    let employerUserService = new EmployerUserService();
+    employerUserService.verify(companyId);
+  }
 
   useEffect(() => {
     let employerUserService = new EmployerUserService();
@@ -25,6 +29,7 @@ export default function EmployerList() {
             <Table.HeaderCell>Website</Table.HeaderCell>
             <Table.HeaderCell>Verified?</Table.HeaderCell>
             <Table.HeaderCell>Active?</Table.HeaderCell>
+            <Table.HeaderCell>Verify</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -38,6 +43,7 @@ export default function EmployerList() {
               <Table.Cell>{employerUser.website}</Table.Cell>
               <Table.Cell>{employerUser.verifiedCompany.toString()}</Table.Cell>
               <Table.Cell>{employerUser.active.toString()}</Table.Cell>
+              <Table.Cell>{employerUser.verifiedCompany?null:<Button onClick={() => verifyCompanyUser(employerUser.id)} positive>Onayla</Button>}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>

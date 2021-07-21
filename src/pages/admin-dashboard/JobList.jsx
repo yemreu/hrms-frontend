@@ -4,6 +4,10 @@ import JobService from "../../services/jobService";
 
 export default function JobList() {
   const [jobs, setJobs] = useState([]);
+  const activateJob = (jobId) => {
+    let jobService = new JobService();
+    jobService.activateJob(jobId);
+  }
 
   useEffect(() => {
     let jobService = new JobService();
@@ -35,7 +39,7 @@ export default function JobList() {
               <Table.Cell>{job.vacancy}</Table.Cell>
               <Table.Cell>{job.postingDate}</Table.Cell>
               <Table.Cell>{job.lastApplicationDate}</Table.Cell>
-              <Table.Cell><Button color="green">Onayla</Button></Table.Cell>
+              <Table.Cell>{job.active?null:<Button onClick={() => activateJob(job.id)} positive>Onayla</Button>}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>

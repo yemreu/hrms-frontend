@@ -20,7 +20,6 @@ export default function AddCoverLetter() {
       .required("Gerekli")
     }),
     onSubmit: values => {
-      delete values.repassword;
       let coverLetterService = new CoverLetterService();
       coverLetterService.addCoverLetter(values);
     }

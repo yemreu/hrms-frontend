@@ -56,8 +56,8 @@ export default function JobSeekerCv() {
         <Segment>
           <Label>Eğitim Bilgileri</Label>
           {educations.map((education) => (
-            <Segment>
-              <div key={education.id}>
+            <Segment key={education.id}>
+              <div>
                 <p><b>Kurum:</b> {education.institutionName}</p>
                 <p><b>Bölüm:</b> {education.department}</p>
                 <p><b>Başlangıç Tarihi:</b> {education.startingDate}</p>
@@ -69,13 +69,13 @@ export default function JobSeekerCv() {
         <Divider horizontal></Divider>
         <Segment>
           <Label>İş Deneyimleri</Label>
-          {experiences.map((experince) => (
-            <Segment>
-              <div key={experince.id}>
-                <p><b>Şirket Adı: </b>{experince.companyName}</p>
-                <p><b>Pozisyon: </b>{experince.title}</p>
-                <p><b>Başlangıç Tarihi: </b>{experince.startDate}</p>
-                <p><b>Bitiş Tarihi: </b>{experince.endDate == null ? ("Devam Ediyor."):(experince.endDate)}</p>
+          {experiences.map((experience) => (
+            <Segment key={experience.id}>
+              <div>
+                <p><b>Şirket Adı: </b>{experience.companyName}</p>
+                <p><b>Pozisyon: </b>{experience.title}</p>
+                <p><b>Başlangıç Tarihi: </b>{experience.startDate}</p>
+                <p><b>Bitiş Tarihi: </b>{experience.endDate == null ? ("Devam Ediyor."):(experience.endDate)}</p>
               </div>
             </Segment>
           ))}

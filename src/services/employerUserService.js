@@ -9,4 +9,8 @@ export default class EmployerUserService {
     register(data){
         return axios.post("http://localhost:8080/api/users/employers/register",data);
     }
+
+    verify(companyId){
+        return axios.put("http://localhost:8080/api/users/employers/verify?companyId=" + companyId);
+    }
 };

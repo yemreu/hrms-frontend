@@ -77,7 +77,11 @@ export default function EditCv() {
     }),
     onSubmit: values => {
       let imageService = new ImageService();
-      imageService.uploadImage(values.image,1);
+      if(values.image != null) {
+        let file = new FormData();
+        file.append("image",values.image);
+        imageService.uploadImage(file,1);
+      }
       let cvService = new CvService();
       let data = {
         jobSeekerUser: {
@@ -107,6 +111,7 @@ export default function EditCv() {
         ],
         languages: [
           {
+            id: 9,
             language: {
               id: values.languages
             },
