@@ -6,8 +6,8 @@ import { Route } from 'react-router-dom';
 export default function Users() {
     return (
         <div>
-            <Route path="/users/job-seekers" component={JobSeeker}/>
-            <Route path="/users/employers" component={Employer}/>
+            <Route path="/users/job-seeker" component={JobSeeker}/>
+            <Route path="/users/employer" component={Employer}/>
         </div>
     )
 }

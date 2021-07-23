@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form } from "semantic-ui-react";
+import { Button, FormGroup } from "semantic-ui-react";
 import CityService from "../../../../services/cityService";
 import JobTitleService from "../../../../services/jobTitleService";
 import JobService from "../../../../services/jobService";
-import { useFormik } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from 'yup';
+import HRMSSelect from "../../../../utilities/customFormControls/HRMSSelect";
+import HRMSTextArea from "../../../../utilities/customFormControls/HRMSTextArea";
+import HRMSCheckbox from "../../../../utilities/customFormControls/HRMSCheckbox";
+import HRMSInput from "../../../../utilities/customFormControls/HRMSInput";
 
 export default function AddJob() {
   const [jobTitles, setJobTitles] = useState([])
@@ -17,96 +21,88 @@ export default function AddJob() {
     cityService.getCities().then(result => setCities(result.data.data));
   }, [])
 
-  const formik = useFormik({
-    initialValues: {
-      jobTitle: 0,
-      description: "",
-      fullTime: false,
-      remote: false,
-      city: 0,
-      minSalary: "",
-      maxSalary: "",
-      vacancy: 0,
-      lastApplicationDate: ""
-    },
-    validationSchema: Yup.object({
-      jobTitle: Yup.number()
-      .required("Gerekli"),
-      description: Yup.string()
-      .required("Gerekli"),
-      city: Yup.number()
-      .required("Gerekli"),
-      minSalary: Yup.number()
-      .positive("Pozitif değer giriniz")
-      .typeError("Sayısal değer giriniz")
-      .required("Gerekli"),
-      maxSalary: Yup.number()
-      .positive("Pozitif değer giriniz")
-      .typeError("Sayısal değer giriniz")
-      .required("Gerekli"),
-      vacancy: Yup.number()
-      .positive("Pozitif değer giriniz")
-      .typeError("Sayısal değer giriniz")
-      .required("Gerekli"),
-      lastApplicationDate: Yup.date()
-      .required("Gerekli"),
-    }),
-    onSubmit: values => {
-      let jobService = new JobService();
-      let data = {
-        employerUser: {
-          id: 19
-        },
-        jobTitle: {
-          id: values.jobTitle
-        },
-        description: values.description,
-        fullTime: values.fullTime,
-        remote: values.remote,
-        city: {
-          code: values.city
-        },
-        minSalary: values.minSalary,
-        maxSalary: values.maxSalary,
-        vacancy: parseInt(values.vacancy,10),
-        lastApplicationDate: values.lastApplicationDate
-      }
-      jobService.addJob(data);
+  const initialValues = {
+    jobTitle: 0,
+    description: "",
+    fullTime: false,
+    remote: false,
+    city: 0,
+    minSalary: "",
+    maxSalary: "",
+    vacancy: 0,
+    lastApplicationDate: ""
+  };
+
+  const validationSchema = Yup.object({
+    jobTitle: Yup.number()
+    .required("Gerekli"),
+    description: Yup.string()
+    .required("Gerekli"),
+    city: Yup.number()
+    .required("Gerekli"),
+    minSalary: Yup.number()
+    .positive("Pozitif değer giriniz")
+    .typeError("Sayısal değer giriniz")
+    .required("Gerekli"),
+    maxSalary: Yup.number()
+    .positive("Pozitif değer giriniz")
+    .typeError("Sayısal değer giriniz")
+    .required("Gerekli"),
+    vacancy: Yup.number()
+    .positive("Pozitif değer giriniz")
+    .typeError("Sayısal değer giriniz")
+    .required("Gerekli"),
+    lastApplicationDate: Yup.date()
+    .min(new Date(),"Bu tarih seçilemez")
+    .required("Gerekli"),
+  });
+
+  const onSubmit = values => {
+    let jobService = new JobService();
+    let data = {
+      employerUser: {
+        id: 19
+      },
+      jobTitle: {
+        id: values.jobTitle
+      },
+      description: values.description,
+      fullTime: values.fullTime,
+      remote: values.remote,
+      city: {
+        code: values.city
+      },
+      minSalary: values.minSalary,
+      maxSalary: values.maxSalary,
+      vacancy: parseInt(values.vacancy,10),
+      lastApplicationDate: values.lastApplicationDate
     }
-});
+    jobService.addJob(data);
+  };
 
   return (
     <div>
-      <h1>İş İlanı Formu</h1>
-      <Form onSubmit={formik.handleSubmit}>
-        <Form.Select id="jobTitle" name="jobTitle" fluid label="İş Pozisyonu" placeholder="İş Pozisyonu" options={jobTitles.map(jobTitle => ({key:jobTitle.id,value:jobTitle.id,text:jobTitle.title}))} onChange={(e,item)=>formik.setFieldValue("jobTitle",item.value)} onBlur={formik.handleBlur}/>
-        {formik.touched.jobTitle && formik.errors.jobTitle ? <div>{formik.errors.jobTitle}</div> : null}
-        <Form.TextArea id="description" name="description" label="İş Tanımı" placeholder="İş Tanımı" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.description}/>
-        {formik.touched.description && formik.errors.description ? <div>{formik.errors.description}</div> : null}
-        <Form.Group widths="equal">
-          <Form.Checkbox id="fullTime" name="fullTime" toggle label="Full Time" onChange={(e) => formik.setFieldValue("fullTime",!formik.values.fullTime)} onBlur={formik.handleBlur}/>
-          <Form.Checkbox id="remote" name="remote" toggle label="Remote" onChange={(e) => formik.setFieldValue("remote",!formik.values.remote)} onBlur={formik.handleBlur}/>
-        </Form.Group>
-        <Form.Select id="city" name="city" fluid label="Şehir" placeholder="Şehir" options={cities.map(city => ({key:city.code,value:city.code,text:city.name}))} onChange={(e,item)=>formik.setFieldValue("city",item.value)} onBlur={formik.handleBlur}/>
-        {formik.touched.city && formik.errors.city ? <div>{formik.errors.city}</div> : null}
-        <Form.Group widths="equal">
-          <Form.Input id="minSalary" name="minSalary" fluid label="En Düşük Maaş" placeholder="En Düşük Maaş" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.minSalary}/>
-          {formik.touched.minSalary && formik.errors.minSalary ? <div>{formik.errors.minSalary}</div> : null}
-          <Form.Input id="maxSalary" name="maxSalary" fluid label="En Yüksek Maaş" placeholder="En Yüksek Maaş" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.maxSalary}/>
-          {formik.touched.maxSalary && formik.errors.maxSalary ? <div>{formik.errors.maxSalary}</div> : null}
-        </Form.Group>
-        <Form.Field>
-          <label>Açık Pozisyon Adedi</label>
-          <input id="vacancy" name="vacancy" type="text" placeholder="Açık Pozisyon Adedi" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.vacancy}/>
-          {formik.touched.vacancy && formik.errors.vacancy ? <div>{formik.errors.vacancy}</div> : null}
-        </Form.Field>
-        <Form.Field>
-          <label>Son Başvuru Tarihi</label>
-          <input id="lastApplicationDate" name="lastApplicationDate" type="date" placeholder="Son Başvuru Tarihi" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.lastApplicationDate}/>
-          {formik.touched.lastApplicationDate && formik.errors.lastApplicationDate ? <div>{formik.errors.lastApplicationDate}</div> : null}
-        </Form.Field>
-        <Button type="submit">Kaydet</Button>
-      </Form>
+      <h1>İş İlanı Formu</h1> 
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
+        { props => (
+          <Form className="ui form">
+            <HRMSSelect fluid id="jobTitle" name="jobTitle" placeholder="İş Pozisyonu" label="İş Pozisyonu" options={jobTitles.map(jobTitle => ({key:jobTitle.id,value:jobTitle.id,text:jobTitle.title}))} formikProps={props}/>
+            <HRMSTextArea id="description"  name="description" label="İş Tanımı" placeholder="İş Tanımı"/>
+            <FormGroup widths="equal">
+              <HRMSCheckbox toggle id="fullTime" name="fullTime" label="Full Time" formikProps={props}/>
+              <HRMSCheckbox toggle id="remote" name="remote" label="Remote" formikProps={props}/>
+            </FormGroup>
+            <HRMSSelect fluid id="city" name="city" placeholder="Şehir" options={cities.map(city => ({key:city.code,value:city.code,text:city.name}))} formikProps={props}/>
+            <FormGroup widths="equal">
+              <HRMSInput fluid type="text" id="minSalary" name="minSalary" placeholder="En Düşük Maaş" label="En Düşük Maaş" />
+              <HRMSInput fluid type="text" id="maxSalary" name="maxSalary" placeholder="En Yüksek Maaş" label="En Yüksek Maaş" />
+            </FormGroup>
+            <HRMSInput fluid type="text" id="vacancy" name="vacancy" placeholder="Açık Pozisyon Adedi" label="Açık Pozisyon Adedi" />
+            <HRMSInput fluid type="date" id="lastApplicationDate" name="lastApplicationDate" placeholder="Son Başvuru Tarihi" label="Son Başvuru Tarihi" />
+            <Button type="submit">Kaydet</Button>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 }

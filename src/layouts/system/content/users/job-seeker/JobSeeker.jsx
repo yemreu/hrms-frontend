@@ -5,7 +5,7 @@ import Register from '../../../../../pages/system/content/users/job-seeker/Regis
 export default function JobSeeker() {
     return (
         <div>
-            <Route path="/users/job-seekers/register" component={Register}/>
+            <Route path="/users/job-seeker/register" component={Register}/>
         </div>
     )
 }

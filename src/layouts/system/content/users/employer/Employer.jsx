@@ -5,7 +5,7 @@ import Register from '../../../../../pages/system/content/users/employer/Registe
 export default function Employer() {
     return (
         <div>
-             <Route path="/users/employers/register" component={Register}/>
+             <Route path="/users/employer/register" component={Register}/>
         </div>
     )
 }
