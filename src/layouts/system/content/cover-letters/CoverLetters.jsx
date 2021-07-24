@@ -5,7 +5,7 @@ import AddCoverLetter from '../../../../pages/system/content/cover-letters/AddCo
 export default function CoverLetters() {
     return (
         <div>
-            <Route path="/cover-letters/add-cover-letter" component={AddCoverLetter}/>
+            <Route path="/cover-letter/add-cover-letter" component={AddCoverLetter}/>
         </div>
     )
 }

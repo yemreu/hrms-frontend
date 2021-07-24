@@ -13,7 +13,7 @@ export default function Content() {
         <Route path="/users" component={Users} />
         <Route path="/" component={Jobs} />
         <Route path="/cv" component={Cv} />
-        <Route path="/cover-letters" component={CoverLetters} />
+        <Route path="/cover-letter" component={CoverLetters} />
       </Container>
     </div>
   );
