@@ -34,12 +34,16 @@ export default function AddJob() {
   };
 
   const validationSchema = Yup.object({
-    jobTitle: Yup.number()
-    .required("Gerekli"),
+    jobTitle: Yup.object().shape({
+      id: Yup.number()
+      .required("Gerekli"),
+    }),
     description: Yup.string()
     .required("Gerekli"),
-    city: Yup.number()
-    .required("Gerekli"),
+    city: Yup.object().shape({
+      code: Yup.number()
+      .required("Gerekli")
+    }),
     minSalary: Yup.number()
     .positive("Pozitif değer giriniz")
     .typeError("Sayısal değer giriniz")
@@ -63,15 +67,11 @@ export default function AddJob() {
       employerUser: {
         id: 19
       },
-      jobTitle: {
-        id: values.jobTitle
-      },
+      jobTitle: values.jobTitle,
       description: values.description,
       fullTime: values.fullTime,
       remote: values.remote,
-      city: {
-        code: values.city
-      },
+      city: values.city,
       minSalary: values.minSalary,
       maxSalary: values.maxSalary,
       vacancy: parseInt(values.vacancy,10),
@@ -86,13 +86,13 @@ export default function AddJob() {
       <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
         { props => (
           <Form className="ui form">
-            <HRMSSelect fluid id="jobTitle" name="jobTitle" placeholder="İş Pozisyonu" label="İş Pozisyonu" options={jobTitles.map(jobTitle => ({key:jobTitle.id,value:jobTitle.id,text:jobTitle.title}))} formikProps={props}/>
+            <HRMSSelect fluid id="jobTitle.id" name="jobTitle.id" placeholder="İş Pozisyonu" label="İş Pozisyonu" options={jobTitles.map(jobTitle => ({key:jobTitle.id,value:jobTitle.id,text:jobTitle.title}))} formikProps={props}/>
             <HRMSTextArea id="description"  name="description" label="İş Tanımı" placeholder="İş Tanımı"/>
             <FormGroup widths="equal">
               <HRMSCheckbox toggle id="fullTime" name="fullTime" label="Full Time" formikProps={props}/>
               <HRMSCheckbox toggle id="remote" name="remote" label="Remote" formikProps={props}/>
             </FormGroup>
-            <HRMSSelect fluid id="city" name="city" placeholder="Şehir" options={cities.map(city => ({key:city.code,value:city.code,text:city.name}))} formikProps={props}/>
+            <HRMSSelect fluid id="city.code" name="city.code" placeholder="Şehir" options={cities.map(city => ({key:city.code,value:city.code,text:city.name}))} formikProps={props}/>
             <FormGroup widths="equal">
               <HRMSInput fluid type="text" id="minSalary" name="minSalary" placeholder="En Düşük Maaş" label="En Düşük Maaş" />
               <HRMSInput fluid type="text" id="maxSalary" name="maxSalary" placeholder="En Yüksek Maaş" label="En Yüksek Maaş" />

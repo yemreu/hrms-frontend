@@ -39,7 +39,7 @@ export default function JobSeekerCv() {
       <h1>CV</h1>
       <Segment>
         <Image centered src={cv.imageUrl} size="medium" />
-        <Divider horizontal></Divider>
+        <Divider section />
         <Segment>
           <Label>Ön Yazı</Label>
           <Segment>
@@ -52,7 +52,7 @@ export default function JobSeekerCv() {
           </Segment>
         </Segment>
 
-        <Divider horizontal></Divider>
+        <Divider section />
         <Segment>
           <Label>Eğitim Bilgileri</Label>
           {educations.map((education) => (
@@ -66,7 +66,7 @@ export default function JobSeekerCv() {
             </Segment>
           ))}
         </Segment>
-        <Divider horizontal></Divider>
+        <Divider section />
         <Segment>
           <Label>İş Deneyimleri</Label>
           {experiences.map((experience) => (
@@ -80,7 +80,7 @@ export default function JobSeekerCv() {
             </Segment>
           ))}
         </Segment>
-        <Divider horizontal></Divider>
+        <Divider section />
         <Segment>
           <Label>Yabancı Diller</Label>
           <Segment>
@@ -98,7 +98,7 @@ export default function JobSeekerCv() {
           </Segment>
         </Segment>
 
-        <Divider horizontal></Divider>
+        <Divider section />
         <Segment>
           <Label>Sosyal Platformlar</Label>
           <Segment>
@@ -115,7 +115,7 @@ export default function JobSeekerCv() {
             ))}
           </Segment>
         </Segment>
-        <Divider horizontal></Divider>
+        <Divider section />
         <Segment>
           <Label>Yetenekler</Label>
           <Segment>
