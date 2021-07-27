@@ -31,6 +31,11 @@ export default function SideMenu() {
           as={NavLink}
           to="/admin-dashboard/inactive-job-list"
         />
+        <Menu.Item
+          name="İşveren profil güncelleme listesi"
+          as={NavLink}
+          to="/admin-dashboard/employer-profile-update-list"
+        />
       </Menu>
     </div>
   );

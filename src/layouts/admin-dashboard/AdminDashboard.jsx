@@ -8,6 +8,7 @@ import { Grid,Container } from "semantic-ui-react";
 import JobTitleList from "../../pages/admin-dashboard/JobTitleList";
 import { Route } from "react-router-dom";
 import JobList from "../../pages/admin-dashboard/JobList";
+import EmployerProfileUpdateList from "../../pages/admin-dashboard/EmployerProfileUpdateList";
 
 export default function AdminDashboard() {
   return (
@@ -24,6 +25,7 @@ export default function AdminDashboard() {
               <Route exact path="/admin-dashboard/job-seeker-list" component={JobSeekerList}/>
               <Route exact path="/admin-dashboard/job-title-list" component={JobTitleList}/>
               <Route exact path="/admin-dashboard/inactive-job-list" component={JobList}/>
+              <Route exact path="/admin-dashboard/employer-profile-update-list" component={EmployerProfileUpdateList}/>
             </Grid.Column>
           </Grid.Row>
         </Grid>
