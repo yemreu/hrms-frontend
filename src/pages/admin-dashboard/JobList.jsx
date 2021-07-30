@@ -4,6 +4,7 @@ import JobService from "../../services/jobService";
 
 export default function JobList() {
   const [jobs, setJobs] = useState([]);
+  
   const activateJob = (jobId) => {
     let jobService = new JobService();
     jobService.activateJob(jobId);

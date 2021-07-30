@@ -29,4 +29,16 @@ export default class JobService {
     addJob(data){
         return axios.post("http://localhost:8080/api/jobs/add",data);
     }
+
+    getJob(jobId){
+        return axios.get("http://localhost:8080/api/jobs/get-job?jobId=" + jobId);
+    }
+
+    addToFavorite(data){
+        return axios.post("http://localhost:8080/api/jobs/add-to-favorite",data);
+    }
+
+    getFilteredJobWithPagination(data,activePage,pageSize){
+        return axios.post("http://localhost:8080/api/jobs/get-job-filtered-with-pagination?activePage=" + activePage + "&pageSize=" + pageSize,data);
+    }
 };

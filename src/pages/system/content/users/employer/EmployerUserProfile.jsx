@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Label, Divider, Segment, Message } from "semantic-ui-react";
+import { Label, Segment, Message } from "semantic-ui-react";
 import EmployerUserService from "../../../../../services/employerUserService";
 
 export default function EmployerUserProfile() {
