@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Icon, Menu, Pagination, Table } from "semantic-ui-react";
+import { useSelector } from "react-redux";
+import { FormSelect, Pagination, Table } from "semantic-ui-react";
 import JobService from "../../../../services/jobService";
 
 export default function JobList() {
   const [jobs, setJobs] = useState([]);
   const [activePage,setActivePage] = useState({activePage: 1})
   const [totalPage,setTotalPage] = useState(0);
-  const [pageSize,setPageSize] = useState(5);
-  const [jobFilter,setJobFilter] = useState({});
+  const [pageSize,setPageSize] = useState(10);
   const [jobCount,setJobCount] = useState(0);
+  const {jobFilter} = useSelector(state => state.jobFilter);
 
   useEffect(() => {
-    console.log(activePage)
     let jobService = new JobService();
     jobService.getFilteredJobWithPagination(jobFilter,activePage.activePage,pageSize).then((result) => {setJobs(result.data.data.paginatedJob);setJobCount(result.data.data.jobCount);});
     setTotalPage(Math.ceil(jobCount / pageSize));
@@ -19,7 +19,7 @@ export default function JobList() {
 
   return (
     <div>
-      <h1>İş İlanları</h1>{console.log(totalPage)}
+      <h1>İş İlanları</h1>
       <Table celled>
         <Table.Header>
           <Table.Row>
@@ -47,22 +47,9 @@ export default function JobList() {
 
         <Table.Footer>
           <Table.Row>
-          <Table.HeaderCell colSpan="6">
-            <Pagination activePage={activePage} totalPages={totalPage} onPageChange={(e,{activePage}) => setActivePage({activePage})} /></Table.HeaderCell>
-            {/* <Table.HeaderCell colSpan="5">
-              <Menu floated="right" pagination>
-                <Menu.Item as="a" icon>
-                  <Icon name="chevron left" />
-                </Menu.Item>
-                <Menu.Item as="a">1</Menu.Item>
-                <Menu.Item as="a">2</Menu.Item>
-                <Menu.Item as="a">3</Menu.Item>
-                <Menu.Item as="a">4</Menu.Item>
-                <Menu.Item as="a" icon>
-                  <Icon name="chevron right" />
-                </Menu.Item>
-              </Menu>
-            </Table.HeaderCell> */}
+            <Table.HeaderCell colSpan="6">
+              <Pagination defaultActivePage={activePage} totalPages={totalPage} onPageChange={(e,{activePage}) => setActivePage({activePage})} /> <FormSelect id="pageSize" name="pageSize" options={[{key:10,value:10,text:10},{key:20,value:20,text:20},{key:50,value:50,text:50},{key:100,value:100,text:100}]} onChange={(e,item) => setPageSize(item.value)} defaultValue={pageSize}/>
+            </Table.HeaderCell>
           </Table.Row>
         </Table.Footer>
       </Table>

@@ -4,9 +4,13 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import { configureStore } from './store/configureStore';
+import { Provider } from 'react-redux';
+
+const reduxStore = configureStore();
 
 ReactDOM.render(
-  <BrowserRouter><App /></BrowserRouter>
+  <Provider store={reduxStore}><BrowserRouter><App /></BrowserRouter></Provider>
     ,
   document.getElementById('root')
 );
